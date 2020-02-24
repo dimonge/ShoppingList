@@ -1,20 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Keyboard} from 'react-native';
-import {
-  Container,
-  List,
-  Content,
-  ListItem,
-  Body,
-  Text,
-  Right,
-  CheckBox,
-  Icon,
-  Left,
-  Item,
-  Input,
-  Button,
-} from 'native-base';
+import {Container, Content} from 'native-base';
 
 import {
   getProductsFromLocalStore,

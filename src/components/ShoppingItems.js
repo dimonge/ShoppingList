@@ -1,5 +1,5 @@
 import React from 'react';
-import {List, Content} from 'native-base';
+import {List} from 'native-base';
 
 import ShoppingItem from './ShoppingItem';
 export default function ShoppingItems({items, onItemPress}) {
