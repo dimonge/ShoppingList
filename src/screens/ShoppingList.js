@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Keyboard} from 'react-native';
 import {
   Container,
@@ -16,14 +16,47 @@ import {
   Button,
 } from 'native-base';
 
+import AsyncStorage from '@react-native-community/async-storage';
+
+const storeKey = '@thevinelabs_shoppinglist_products';
+async function addProductsToLocalStore(products) {
+  try {
+    await AsyncStorage.setItem(storeKey, JSON.stringify(products));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function getProductsFromLocalStore() {
+  try {
+    const products = await AsyncStorage.getItem(storeKey);
+
+    if (!!products) {
+      return JSON.parse(products);
+    } else {
+      return [];
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
 export default function ShoppingList() {
   const [state, setState] = useState({
-    products: [
-      {id: 1, name: 'bread', gotten: true},
-      {id: 2, name: 'eggs', gotten: false},
-    ],
+    products: [],
     value: '',
   });
+
+  useEffect(() => {
+    async function getProducts() {
+      const products = await getProductsFromLocalStore();
+      if (!!products) {
+        setState({
+          products,
+        });
+      }
+    }
+    getProducts();
+  }, []);
   function onItemClick(item) {
     if (state.products) {
       setState({
@@ -37,14 +70,17 @@ export default function ShoppingList() {
     }
   }
 
-  function onAddItemPress() {
+  async function onAddItemPress() {
     if (!!state.value.trim().length > 0) {
+      const products = state.products.concat({
+        id: state.products.length + 1,
+        name: state.value.trim(),
+        gotten: false,
+      });
+
+      await addProductsToLocalStore(products);
       setState({
-        products: state.products.concat({
-          id: state.products.length + 1,
-          name: state.value.trim(),
-          gotten: false,
-        }),
+        products,
         value: '',
       });
     }
