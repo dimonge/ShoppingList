@@ -21,8 +21,9 @@ import {
   addProductsToLocalStore,
 } from '../store/localstorage';
 
-import ShoppingItem from '../components/ShoppingItem';
+import ShoppingItems from '../components/ShoppingItems';
 import AddItem from '../components/AddItem';
+
 export default function ShoppingList() {
   const [state, setState] = useState({
     products: [],
@@ -69,20 +70,11 @@ export default function ShoppingList() {
     }
   }
 
-  function onAddItemPressWithKeyboardDismiss(event) {
-    if (event && event.nativeEvent && event.nativeEvent.key === 'Enter') {
-      onAddItemPress();
-      Keyboard.dismiss();
-    }
-  }
-  const items = state.products.map(item => {
-    return <ShoppingItem key={item.id} item={item} onItemPress={onItemPress} />;
-  });
-  console.log('Items', state.products);
+  console.log('Shopping Products', state.products);
   return (
     <Container style={{paddingBottom: 20}}>
       <Content>
-        <List>{items}</List>
+        <ShoppingItems items={state.products} onItemPress={onItemPress} />
       </Content>
       <AddItem
         onAddItemPress={onAddItemPress}
